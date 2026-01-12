@@ -38,7 +38,7 @@ resource "aws_iam_policy" "cicd_docker_push" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "cicd_docker_push_attach" {
-  role       = data.aws_iam_role.cicd.name
+resource "aws_iam_role_policy_attachment" "cicd_docker_push_new_attach" {
+  role       = aws_iam_role.docker_pipeline_new.name
   policy_arn = aws_iam_policy.cicd_docker_push.arn
 }

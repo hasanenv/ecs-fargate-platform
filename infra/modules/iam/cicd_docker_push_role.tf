@@ -1,5 +1,5 @@
-resource "aws_iam_role" "docker_pipeline" {
-  name = "docker-build-push-role"
+resource "aws_iam_role" "docker_pipeline_new" {
+  name = "docker-build-push-role-2"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
