@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
     paths: ["app/**"]
+  workflow_run:
+    workflows: ["ci pipeline"]
+    types:
+      - completed
 
   workflow_dispatch:
 
