@@ -31,7 +31,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/docker-build-push-role
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/docker-build-push-role-2
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Test OIDC role assumption
