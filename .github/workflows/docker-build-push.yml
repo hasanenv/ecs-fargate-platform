@@ -37,13 +37,14 @@ jobs:
       - name: login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: build and push docker image
-        uses: aws-actions/amazon-ecr-build-push-image@v1
+      - name: Build, tag, and push Docker image
+        uses: aws-actions/amazon-ecr-build-push@v1
         with:
           repository: ${{ env.ECR_REPO_NAME }}
           image-tag: ${{ env.IMAGE_TAG }}
           region: ${{ env.AWS_REGION }}
           source: ./app/gatus
+
 
       - name: Docker build and push summary
         run: |
