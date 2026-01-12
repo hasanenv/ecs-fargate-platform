@@ -1,0 +1,50 @@
+name: docker build and push
+
+on:
+  push:
+    branches: [main]
+    paths: ["app/**"]
+
+  workflow_dispatch:
+
+env:
+  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REPO_NAME: gatus
+  ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+  IMAGE_TAG: ${{ github.sha }}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+
+  docker-build-push:
+    name: docker-build-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/docker-build-push-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: build and push docker image
+        uses: aws-actions/amazon-ecr-build-push-image@v1
+        with:
+          repository: ${{ env.ECR_REPO_NAME }}
+          image-tag: ${{ env.IMAGE_TAG }}
+          region: ${{ env.AWS_REGION }}
+          source: ./app/gatus
+
+      - name: Docker build and push summary
+        run: |
+          echo "### Docker image successfully built and pushed" >> $GITHUB_STEP_SUMMARY
