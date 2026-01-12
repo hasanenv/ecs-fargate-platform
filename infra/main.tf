@@ -12,6 +12,8 @@ module "iam" {
   source = "./modules/iam"
 
   cicd_role_name = "hasanenv-cd-role-ecs"
+  github_repo    = var.github_repo
+  aws_account_id = var.aws_account_id
   owner          = var.owner
 }
 

@@ -3,6 +3,16 @@ variable "cicd_role_name" {
   type        = string
 }
 
+variable "aws_account_id" {
+  description = "AWS Account ID where the IAM role will be created."
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository in the format 'owner/repo' for OIDC trust relationship."
+  type        = string
+}
+
 variable "owner" {
   type = string
 }
