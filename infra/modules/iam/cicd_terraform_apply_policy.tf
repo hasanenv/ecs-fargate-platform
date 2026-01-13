@@ -1,5 +1,5 @@
-resource "aws_iam_policy" "cicd_apply" {
-  name        = "hasanenv-cicd-apply"
+resource "aws_iam_policy" "terraform_apply" {
+  name        = "hasanenv-terraform-apply"
   description = "Write permissions for ECS deployments and Terraform state (CI/CD)"
 
   policy = jsonencode({
@@ -96,4 +96,9 @@ resource "aws_iam_policy" "cicd_apply" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "terraform_apply_attach" {
+  role       = aws_iam_role.terraform_apply_role.name
+  policy_arn = aws_iam_policy.terraform_apply.arn
 }
