@@ -1,6 +1,6 @@
 resource "aws_iam_policy" "terraform_apply" {
   name        = "hasanenv-terraform-apply"
-  description = "Write permissions for ECS deployments and Terraform state (CI/CD)"
+  description = "permissions for ECS deployments, Terraform state, and resource management"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -33,7 +33,8 @@ resource "aws_iam_policy" "terraform_apply" {
           "ecr:CompleteLayerUpload",
           "ecr:PutImage",
           "ecr:DescribeRepositories",
-          "ecr:BatchCheckLayerAvailability"
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:ListTagsForResource"
         ]
         Resource = "*"
       },
@@ -61,16 +62,30 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "arn:aws:dynamodb:eu-west-2:727646481331:table/terraform-state-lock"
       },
       {
-        Sid      = "Route53Changes"
-        Effect   = "Allow"
-        Action   = ["route53:ChangeResourceRecordSets"]
-        Resource = "arn:aws:route53:::hostedzone/Z0286219X2C9UMZ2LRUH"
+        Sid    = "Route53Changes"
+        Effect = "Allow"
+        Action = [
+          "route53:ChangeResourceRecordSets",
+          "route53:ListHostedZones"
+        ]
+        Resource = "*"
       },
       {
-        Sid      = "PassExecutionRole"
-        Effect   = "Allow"
-        Action   = ["iam:PassRole"]
-        Resource = "arn:aws:iam::727646481331:role/ecsTaskExecutionRole"
+        Sid    = "ACMRead"
+        Effect = "Allow"
+        Action = ["acm:DescribeCertificate"]
+        Resource = "*"
+      },
+      {
+        Sid    = "IAMReads"
+        Effect = "Allow"
+        Action = [
+          "iam:GetRole",
+          "iam:GetPolicy",
+          "iam:ListPolicies",
+          "iam:PassRole"
+        ]
+        Resource = "*"
       },
       {
         Sid    = "LogsWrite"
@@ -91,6 +106,17 @@ resource "aws_iam_policy" "terraform_apply" {
           "ssm:DeleteParameter",
           "ssm:AddTagsToResource",
           "ssm:RemoveTagsFromResource"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "EC2Read"
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeVpcs",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeRouteTables"
         ]
         Resource = "*"
       }
