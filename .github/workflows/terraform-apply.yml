@@ -2,7 +2,7 @@ name: terraform apply
 
 on: 
   workflow_run:
-    workflows: ["ci pipeline"]
+    workflows: ["docker build and push"]
     types:
       - completed
       
