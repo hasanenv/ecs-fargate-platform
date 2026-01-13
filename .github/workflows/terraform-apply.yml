@@ -10,6 +10,7 @@ on:
 
 env:
   TF_VAR_image_tag: ${{ github.sha }}
+  TF_VAR_aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
   TF_VAR_aws_region: ${{ vars.AWS_REGION }}
   TF_VAR_owner: ${{ vars.OWNER }}
   TF_VAR_availability_zones: ${{ vars.AVAILABILITY_ZONES }} 
