@@ -71,9 +71,9 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
       {
-        Sid    = "ACMRead"
-        Effect = "Allow"
-        Action = ["acm:DescribeCertificate"]
+        Sid      = "ACMRead"
+        Effect   = "Allow"
+        Action   = ["acm:DescribeCertificate"]
         Resource = "*"
       },
       {
