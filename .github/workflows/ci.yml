@@ -6,11 +6,13 @@ on:
     paths:
       - "app/**"
       - "infra/**"
+
   pull_request:
     branches: [main]
     paths:
       - "app/**"
       - "infra/**"
+
   workflow_dispatch:
 
 jobs:
@@ -91,4 +93,4 @@ jobs:
 
       - name: CI summary
         run: |
-          echo
+          echo "### Terraform code passed all checks" >> $GITHUB_STEP_SUMMARY
