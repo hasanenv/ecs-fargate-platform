@@ -9,6 +9,11 @@ on:
     types:
       - completed
 
+  workflow_run:
+    workflows: ["ci pipeline"]
+    types:
+      - completed
+      
   workflow_dispatch:
 
 env:
