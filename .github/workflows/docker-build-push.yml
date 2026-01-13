@@ -1,14 +1,6 @@
 name: docker build and push
 
 on:
-  push:
-    branches: [main]
-    paths: ["app/**"]
-  workflow_run:
-    workflows: ["ci pipeline"]
-    types:
-      - completed
-
   workflow_run:
     workflows: ["ci pipeline"]
     types:
@@ -30,6 +22,7 @@ permissions:
 jobs:
 
   docker-build-push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: docker-build-push
     runs-on: ubuntu-latest
 
