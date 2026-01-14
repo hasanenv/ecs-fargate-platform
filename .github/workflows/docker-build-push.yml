@@ -22,7 +22,7 @@ permissions:
 jobs:
 
   docker-build-push:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && contains(github.event.head_commit.modified, 'app/') }}
     name: docker-build-push
     runs-on: ubuntu-latest
 
