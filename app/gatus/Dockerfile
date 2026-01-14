@@ -4,10 +4,10 @@ FROM golang:alpine AS builder
 RUN apk --update add ca-certificates
 WORKDIR /app
 COPY . ./
-# -s - symbol table. -w - DWARF debugging info
+# -s - symbol table, -w - DWARF debugging info
 RUN go build -v -trimpath -ldflags="-s -w" -o gatus . 
 
-# stage 2: run the binary
+# stage 2: run binary
 
 FROM alpine:3.23 
 RUN addgroup -g 10001 -S gatus \
