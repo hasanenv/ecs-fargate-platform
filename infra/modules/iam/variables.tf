@@ -13,10 +13,6 @@ variable "github_repo" {
   type        = string
 }
 
-variable "image_tag" {
-  type = string
-}
-
 variable "owner" {
   type = string
 }

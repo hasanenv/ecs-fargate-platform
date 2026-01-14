@@ -6,11 +6,15 @@ variable "alb_target_group_arn" {
   type = string
 }
 
-variable "image_url" {
+variable "image_tag" {
   type = string
 }
 
-variable "image_tag" {
+variable "ecr_registry" {
+  type = string
+}
+
+variable "ecr_repo" {
   type = string
 }
 

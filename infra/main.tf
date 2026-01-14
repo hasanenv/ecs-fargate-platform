@@ -60,7 +60,8 @@ module "route_53" {
 module "ecs" {
   source = "./modules/ecs"
 
-  image_url                   = module.ecr.repository_url
+  ecr_registry                = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
+  ecr_repo                    = "gatus-repo"
   image_tag                   = var.image_tag
   alb_target_group_arn        = module.alb.alb_target_group_arn
   ecs_service_sg_id           = module.security_groups.ecs_service_sg_id
