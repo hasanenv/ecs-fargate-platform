@@ -51,6 +51,9 @@ jobs:
       - name: check iam role
         run: aws sts get-caller-identity
 
+      - name: echo variable for test 
+        run: echo "IMAGE='${TF_VAR_image_tag}'"
+
       - name: terraform apply
         working-directory: ./infra/
         run: terraform apply -auto-approve
