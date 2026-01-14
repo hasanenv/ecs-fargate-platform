@@ -16,7 +16,7 @@ env:
   IMAGE_TAG: ${{ github.sha }}
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
@@ -36,9 +36,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/docker-build-push-role-2
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Test OIDC role assumption
-        run: aws sts get-caller-identity
-
       - name: login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
         with:
@@ -48,12 +45,31 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }} ./app/gatus
 
-      - name: Tag Docker image for ECR
+      - name: tag Docker image for ECR
         run: docker tag ${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }}
 
-      - name: Push Docker image
+      - name: push Docker image
         run: docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }}
+
+      - name: write current image tag to file
+        run: echo "${{ env.IMAGE_TAG }}" > image_tag.txt
+
+      - name: commit image tag
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add image_tag.txt
+          git commit -m "Update image tag to ${{ env.IMAGE_TAG }}"
+          git push origin ${{ github.ref }}
 
       - name: Docker build and push summary
         run: |
           echo "### Docker image successfully built and pushed" >> $GITHUB_STEP_SUMMARY
+
+      - name: update CURRENT_IMAGE_TAG variable in repo variables
+        uses: peter-evans/repository-dispatch@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: update-image-tag
+          client-payload: '{"CURRENT_IMAGE_TAG":"${{ env.IMAGE_TAG }}"}'
