@@ -1,10 +1,10 @@
 name: terraform apply
 
-on: 
-  workflow_run:
-    workflows: ["docker build and push"]
-    types:
-      - completed
+on:
+  push:
+    branches: [main]
+    paths:
+      - "infra/**"
       
   workflow_dispatch:
 
@@ -26,7 +26,6 @@ permissions:
 jobs:
 
   terraform-apply:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: terraform-apply
     runs-on: ubuntu-latest
 
@@ -40,30 +39,22 @@ jobs:
           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/terraform-apply-role
           aws-region: ${{ env.TF_VAR_aws_region }}
 
-      - name: Set TF_VAR_IMAGE_TAG
-        run: |
-          if [ -n "${{ github.event.workflow_run.outputs.image_tag }}" ]; then
-            echo "TF_VAR_IMAGE_TAG=${{ github.event.workflow_run.outputs.image_tag }}" >> $GITHUB_ENV
-          else
-            echo "TF_VAR_IMAGE_TAG=" >> $GITHUB_ENV
-          fi
-
-      - name: Setup Terraform
+      - name: setup terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.5
 
-      - name: terraform Init
+      - name: terraform init
         working-directory: ./infra/
         run: terraform init
 
       - name: check iam role
         run: aws sts get-caller-identity
 
-      - name: Terraform Apply
+      - name: terraform apply
         working-directory: ./infra/
         run: terraform apply -auto-approve
 
-      - name: Terraform apply summary
+      - name: terraform apply summary
         run: |
           echo "### Terraform apply completed successfully" >> $GITHUB_STEP_SUMMARY
