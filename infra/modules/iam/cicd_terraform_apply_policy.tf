@@ -8,9 +8,9 @@ resource "aws_iam_policy" "terraform_apply" {
 
       ##### TERRAFORM CORE READS #####
       {
-        Sid    = "TerraformCallerIdentity"
-        Effect = "Allow"
-        Action = ["sts:GetCallerIdentity"]
+        Sid      = "TerraformCallerIdentity"
+        Effect   = "Allow"
+        Action   = ["sts:GetCallerIdentity"]
         Resource = "*"
       },
 
@@ -214,9 +214,9 @@ resource "aws_iam_policy" "terraform_apply" {
 
       ##### EC2 #####
       {
-        Sid    = "EC2Reads"
-        Effect = "Allow"
-        Action = ["ec2:Describe*"]
+        Sid      = "EC2Reads"
+        Effect   = "Allow"
+        Action   = ["ec2:Describe*"]
         Resource = "*"
       },
 
