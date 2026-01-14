@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "gatus_task_def" {
   container_definitions = jsonencode([
     {
       name      = "gatus"
-      image     = var.image_url
+      image = "${var.image_url}:${var.image_tag}"
       essential = true
 
       secrets = [

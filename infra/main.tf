@@ -60,7 +60,8 @@ module "route_53" {
 module "ecs" {
   source = "./modules/ecs"
 
-  image_url                   = "${module.ecr.repository_url}:${var.image_tag}"
+  image_url                   = module.ecr.repository_url
+  image_tag                   = var.image_tag
   alb_target_group_arn        = module.alb.alb_target_group_arn
   ecs_service_sg_id           = module.security_groups.ecs_service_sg_id
   aws_region                  = var.aws_region
