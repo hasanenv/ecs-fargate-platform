@@ -52,7 +52,7 @@ jobs:
         run: docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: write current image tag to file
-        run: echo "${{ env.IMAGE_TAG }}" > image_tag.txt
+        run: printf "%s" "${{ env.IMAGE_TAG }}" > image_tag.txt
 
       - name: commit image tag
         run: |
