@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . ./
 RUN go build -v -trimpath -ldflags="-s -w" -o gatus .
 
-# stage 2: runtime
+# stage 2: run binary
 FROM dhi.io/alpine-base:3.23-alpine3.23-dev
 
 WORKDIR /app
