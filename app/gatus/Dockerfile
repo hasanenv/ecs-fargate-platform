@@ -9,7 +9,7 @@ RUN go build -v -trimpath -ldflags="-s -w" -o gatus .
 
 # stage 2: run binary
 
-FROM alpine:3.23 
+FROM alpine:3.23.2
 RUN addgroup -g 10001 -S gatus \
 && adduser -u 10001 -S gatus -g gatus  
 
