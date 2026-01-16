@@ -59,8 +59,9 @@ jobs:
       - name: scan image
         uses: anchore/scan-action@v6
         with:
-          image: "ci:test"
+          image: gatus:${{ steps.meta.outputs.tag }}
           severity-cutoff: high
+          config-file: ./anchore.yml
 
       - name: app ci summary
         run: |
