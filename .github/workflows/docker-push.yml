@@ -29,6 +29,7 @@ jobs:
         with:
           name: image
           run-id: ${{ github.event.workflow_run.id }}
+          repository: ${{ github.repository }}
 
       - name: Load Docker image
         run: gunzip -c image.tar.gz | docker load
