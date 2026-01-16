@@ -1,0 +1,4 @@
+ignore:
+  - vulnerability: CVE-2026-22184
+    reason: "Not exploitable in distroless runtime"
+    fix-state: unknown
