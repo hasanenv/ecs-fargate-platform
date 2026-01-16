@@ -24,7 +24,10 @@ jobs:
         run: echo "tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
       - name: Login to dhi.io registry
-        run: echo "${{ secrets.DHI_IO_TOKEN }}" | docker login dhi.io -u ${{ vars.DHI_IO_USERNAME }} --password-stdin --config /tmp/docker-config
+        env: 
+          DOCKER_CONFIG: /tmp/docker-config
+        run: | 
+          echo "${{ secrets.DHI_IO_TOKEN }}" | docker login dhi.io -u ${{ vars.DHI_IO_USERNAME }} --password-stdin 
 
       - name: Build Docker image
         run: docker build -t gatus:${{ steps.meta.outputs.tag }} ./app/gatus
