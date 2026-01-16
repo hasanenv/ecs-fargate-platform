@@ -4,13 +4,15 @@ on:
   workflow_run:
     workflows: ["ci"]
     types: [completed]
+    
+  workflow-dispatch:
 
 env:
   AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
   AWS_REGION: ${{ vars.AWS_REGION }}
   ECR_REPO_NAME: ${{ vars.AWS_REPO }}
   ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
-  IMAGE_TAG: ${{ github.event.workflow_run.outputs.image_tag }}
+  IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
 
 jobs:
   push:
@@ -24,6 +26,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: image
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Load Docker image
         run: gunzip -c image.tar.gz | docker load

@@ -34,7 +34,6 @@ jobs:
         with:
           image: gatus:${{ steps.meta.outputs.tag }}
           severity-cutoff: high
-          config-file: ./.grype.yaml
 
       - name: Save image for downstream workflows
         run: docker save gatus:${{ steps.meta.outputs.tag }} | gzip > image.tar.gz
