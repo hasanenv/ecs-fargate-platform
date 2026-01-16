@@ -1,4 +1,4 @@
-# stage 1: build binary
+# stage 1: build binary 
 FROM golang:alpine AS builder
 RUN apk --update add ca-certificates
 WORKDIR /app
