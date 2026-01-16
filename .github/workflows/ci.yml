@@ -23,14 +23,16 @@ jobs:
         id: meta
         run: echo "tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
-      - name: Login to dhi.io registry
-        env: 
-          DOCKER_CONFIG: /tmp/docker-config
-        run: | 
-          echo "${{ secrets.DHI_IO_TOKEN }}" | docker login dhi.io -u ${{ vars.DHI_IO_USERNAME }} --password-stdin 
+      - name: Write dhi.io token for BuildKit
+        run: echo "${{ secrets.DHI_IO_TOKEN }}" > /tmp/dhi_token.txt
 
       - name: Build Docker image
-        run: docker build -t gatus:${{ steps.meta.outputs.tag }} ./app/gatus
+        run: |
+          docker build \
+            --progress=plain \
+            --pull \
+            --secret id=dhi_token,src=/tmp/dhi_token.txt \
+            -t gatus:${{ steps.meta.outputs.tag }} ./app/gatus
 
       - name: Scan image with Anchore
         uses: anchore/scan-action@v6
