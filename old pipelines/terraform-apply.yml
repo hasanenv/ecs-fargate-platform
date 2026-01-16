@@ -1,0 +1,63 @@
+name: terraform apply
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "infra/**"
+      
+  workflow_dispatch:
+
+env:
+  TF_VAR_image_tag: ${{ vars.CURRENT_IMAGE_TAG }}
+  TF_VAR_github_repo: ${{ vars.MY_REPO }}
+  TF_VAR_aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
+  TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+  TF_VAR_owner: ${{ vars.OWNER }}
+  TF_VAR_availability_zones: ${{ vars.AVAILABILITY_ZONES }} 
+  TF_VAR_vpc_cidr: ${{ vars.VPC_CIDR }}
+  TF_VAR_public_subnet_cidrs: ${{ vars.PUBLIC_SUBNET_CIDRS }}
+  TF_VAR_private_subnet_cidrs: ${{ vars.PRIVATE_SUBNET_CIDRS }}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+
+  terraform-apply:
+    name: terraform-apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/terraform-apply-role
+          aws-region: ${{ env.TF_VAR_aws_region }}
+
+      - name: setup terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.5
+
+      - name: terraform init
+        working-directory: ./infra/
+        run: terraform init
+
+      - name: check iam role
+        run: aws sts get-caller-identity
+
+      - name: echo variable for test 
+        run: echo "IMAGE='${TF_VAR_image_tag}'"
+
+      - name: terraform apply
+        working-directory: ./infra/
+        run: terraform apply -auto-approve
+
+      - name: terraform apply summary
+        run: |
+          echo "### Terraform apply completed successfully" >> $GITHUB_STEP_SUMMARY
