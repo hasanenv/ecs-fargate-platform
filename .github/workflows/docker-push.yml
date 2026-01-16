@@ -12,6 +12,10 @@ env:
   ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
   IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   push:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
