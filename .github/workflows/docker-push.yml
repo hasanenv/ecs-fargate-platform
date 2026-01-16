@@ -4,8 +4,6 @@ on:
   workflow_run:
     workflows: ["ci"]
     types: [completed]
-    
-  workflow-dispatch:
 
 env:
   AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
