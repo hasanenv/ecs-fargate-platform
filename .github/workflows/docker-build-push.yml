@@ -1,0 +1,71 @@
+name: docker-build-push
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "app/**"
+
+env:
+  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REPO_NAME: ${{ vars.AWS_REPO }}
+  ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+
+jobs:
+  docker-build-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image metadata
+        id: meta
+        run: echo "tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Login to dhi.io registry
+        run: echo "${{ secrets.DHI_IO_TOKEN }}" | docker login dhi.io -u ${{ vars.DHI_IO_USERNAME }} --password-stdin
+
+      - name: Pull private base image
+        run: docker pull dhi.io/alpine-base:3.23-alpine3.23-dev
+
+      - name: Build Docker image
+        run: docker build -t gatus:${{ steps.meta.outputs.tag }} ./app/gatus
+
+      - name: Scan image with Anchore
+        uses: anchore/scan-action@v6
+        with:
+          image: gatus:${{ steps.meta.outputs.tag }}
+          severity-cutoff: high
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-ecr-push
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Tag image for ECR
+        run: docker tag gatus:${{ steps.meta.outputs.tag }} ${ECR_REGISTRY}/${ECR_REPO_NAME}:${{ steps.meta.outputs.tag }}
+
+      - name: Push image to ECR
+        run: docker push ${ECR_REGISTRY}/${ECR_REPO_NAME}:${{ steps.meta.outputs.tag }}
+
+      - name: Update CURRENT_IMAGE_TAG repo variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          curl -X PATCH \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/variables/CURRENT_IMAGE_TAG \
+            -d "{\"value\":\"${IMAGE_TAG}\"}"
