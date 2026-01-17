@@ -17,6 +17,7 @@ env:
   ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
 
 permissions:
+  actions: write 
   contents: read
   id-token: write
 
