@@ -1,3 +1,7 @@
+data "aws_ssm_parameter" "current_image_tag" {
+  name = "/gatus/current_image_tag"
+}
+
 resource "aws_ecs_cluster" "gatus_cluster" {
   name = "gatus-cluster"
 
@@ -27,7 +31,7 @@ resource "aws_ecs_task_definition" "gatus_task_def" {
   container_definitions = jsonencode([
     {
       name      = "gatus"
-      image     = "${var.ecr_registry}/${var.ecr_repo}:${var.image_tag}"
+      image     = "${var.ecr_registry}/${var.ecr_repo}:${data.aws_ssm_parameter.current_image_tag.value}"
       essential = true
 
       secrets = [

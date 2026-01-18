@@ -35,12 +35,7 @@ variable "owner" {
 # -------------------------
 # Deployment
 # -------------------------
-variable "image_tag" {
-  type        = string
-  description = "Docker image tag for ECS task definition"
-}
 
 variable "github_repo" {
-  type        = string
-  description = "GitHub repository in the format 'owner/repo' for OIDC trust relationship."
+  type = string
 }

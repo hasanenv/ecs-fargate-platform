@@ -6,10 +6,6 @@ variable "alb_target_group_arn" {
   type = string
 }
 
-variable "image_tag" {
-  type = string
-}
-
 variable "ecr_registry" {
   type = string
 }
