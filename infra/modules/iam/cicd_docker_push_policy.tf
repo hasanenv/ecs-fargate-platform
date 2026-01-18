@@ -33,6 +33,14 @@ resource "aws_iam_policy" "cicd_docker_push" {
           "logs:ListTagsForResource"
         ]
         Resource = "*"
+      },
+      {
+        Sid    = "WriteCurrentImageTagToSSM"
+        Effect = "Allow"
+        Action = [
+          "ssm:PutParameter"
+        ]
+        Resource = "arn:aws:ssm:*:*:parameter/gatus/current_image_tag"
       }
     ]
   })

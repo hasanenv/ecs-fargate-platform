@@ -17,15 +17,12 @@ env:
   ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
 
 permissions:
-  actions: write 
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
   docker-build-push:
     runs-on: ubuntu-latest
-    outputs:
-      image_tag: ${{ steps.meta.outputs.tag }}
 
     steps:
       - uses: actions/checkout@v4
@@ -64,16 +61,11 @@ jobs:
       - name: Push image to ECR
         run: docker push ${ECR_REGISTRY}/${ECR_REPO_NAME}:${{ steps.meta.outputs.tag }}
 
-      - name: Update CURRENT_IMAGE_TAG repo variable
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_TAG: ${{ steps.meta.outputs.tag }}
+      - name: Store image tag in SSM 
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Content-Type: application/json" \
-            https://api.github.com/repos/${{ github.repository }}/actions/variables/CURRENT_IMAGE_TAG \
-            -d "{\"value\":\"${IMAGE_TAG}\"}")
-          echo "PATCH request status: $STATUS"
+          aws ssm put-parameter \
+            --name "/gatus/current_image_tag" \
+            --value "${{ steps.meta.outputs.tag }}" \
+            --type String \
+            --overwrite
 
