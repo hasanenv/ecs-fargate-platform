@@ -103,30 +103,44 @@ ecs-fargate-platform
 
 ## CI/CD Workflow
 
+This project uses three GitHub Actions workflows with clear separation of responsibility.
+
+### Docker Build and Push
+- Runs on push and PRs to main when app/** changes.
+- Builds and scans the container image (Anchore scan with high severity cut off)
+- Authenticates to AWS via OIDC and pushes SHA-tagged image to ECR
+- Stores the image tag in **SSM Parameter Store**
+
 > [!IMPORTANT]
-> CI is treated as a hard gate. No infrastructure changes or deployments occur unless all validation steps pass.
+> [CVE-2026-22184](https://nvd.nist.gov/vuln/detail/CVE-2026-22184#vulnCurrentDescriptionTitle) is explicitly whitelisted via `.grype.yaml` as it only affects the `untgz` utility of the `zlib` library.
+> 
+> This utility is not used by our application.
 
-CI runs on every push and pull request and performs validation only:
-
-- Docker image build for verification  
-- Terraform formatting, linting, and static checks
-- Security scanning of the container image
-
-CD runs only after CI succeeds:
-
-- Manually triggered via GitHub Actions when infrastructure is available (added later)
-- Authenticates to AWS using OIDC (no long lived credentials)  
-- Builds and tags container images immutably  
-- Applies Terraform and updates ECS task definitions
-
-### CI/CD Successful Run
-<p align="center">
-  <img src="assets/cicd-summary.png" width="700">
+**Docker Pipeline Successful Run**
+<p align="left">
+  <img src="assets/docker-build-push.png" width="350">
 </p>
 
-### Manual Deployment Trigger
-<p align="center">
-  <img src="assets/manual-cd.png" width="350">
+### Terraform Apply (Manual)
+- Triggered manually via GitHub Actions
+- Applies infrastructure changes using Terraform
+- Pulls current image tag from SSM if no new image was deployed
+- Uses OIDC with no long lived credentials
+
+**Apply Pipeline Successful Run**
+<p align="left">
+  <img src="assets/terraform-apply.png" width="350">
+</p>
+
+### Terraform Destroy (Manual)
+- Triggered manually via GitHub Actions
+- Creates a destroy plan before execution
+- Uses a dedicated IAM role scoped for destructive actions
+- Fully tears down infrastructure in a controlled manner
+
+**Destroy Pipeline Successful Run**
+<p align="left">
+  <img src="assets/manual-destroy.png" width="350">
 </p>
 
 ## Containers & Runtime
