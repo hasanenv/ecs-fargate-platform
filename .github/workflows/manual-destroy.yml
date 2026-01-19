@@ -1,0 +1,44 @@
+name: manual-destroy
+
+on:
+  workflow_dispatch:
+
+env:
+  TF_VAR_github_repo: ${{ vars.MY_REPO }}
+  TF_VAR_aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
+  TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+  TF_VAR_owner: ${{ vars.OWNER }}
+  TF_VAR_availability_zones: ${{ vars.AVAILABILITY_ZONES }}
+  TF_VAR_vpc_cidr: ${{ vars.VPC_CIDR }}
+  TF_VAR_public_subnet_cidrs: ${{ vars.PUBLIC_SUBNET_CIDRS }}
+  TF_VAR_private_subnet_cidrs: ${{ vars.PRIVATE_SUBNET_CIDRS }}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform-destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.TF_VAR_aws_account_id }}:role/terraform-apply-role
+          aws-region: ${{ env.TF_VAR_aws_region }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.5
+
+      - name: Terraform init
+        working-directory: infra/
+        run: terraform init
+
+      - name: Terraform destroy
+        working-directory: infra/
+        run: terraform destroy -auto-approve
