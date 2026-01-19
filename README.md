@@ -118,7 +118,7 @@ This project uses three GitHub Actions workflows with clear separation of respon
 
 **Docker Pipeline Successful Run**
 <p align="left">
-  <img src="assets/docker-build-push.png" width="350">
+  <img src="assets/docker-build-push.png" width="300">
 </p>
 
 ### Terraform Apply (Manual)
@@ -129,7 +129,7 @@ This project uses three GitHub Actions workflows with clear separation of respon
 
 **Apply Pipeline Successful Run**
 <p align="left">
-  <img src="assets/terraform-apply.png" width="350">
+  <img src="assets/terraform-apply.png" width="300">
 </p>
 
 ### Terraform Destroy (Manual)
@@ -140,7 +140,7 @@ This project uses three GitHub Actions workflows with clear separation of respon
 
 **Destroy Pipeline Successful Run**
 <p align="left">
-  <img src="assets/manual-destroy.png" width="350">
+  <img src="assets/manual-destroy.png" width="300">
 </p>
 
 ## Containers & Runtime
