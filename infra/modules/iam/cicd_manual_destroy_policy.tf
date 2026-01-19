@@ -4,85 +4,85 @@ resource "aws_iam_policy" "manual_destroy_policy" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-
       {
         Effect = "Allow"
         Action = [
-          "ecs:DeleteService",
-          "ecs:DeregisterTaskDefinition",
-          "ecs:DescribeServices",
-          "ecs:UpdateService"
+          "ecs:*"
         ]
         Resource = "*"
       },
-
       {
         Effect = "Allow"
         Action = [
-          "elasticloadbalancing:DeleteListener",
-          "elasticloadbalancing:DeleteLoadBalancer",
-          "elasticloadbalancing:DeleteTargetGroup",
-          "elasticloadbalancing:Describe*"
+          "elasticloadbalancing:*"
         ]
         Resource = "*"
       },
-
       {
         Effect = "Allow"
         Action = [
-          "ec2:DisassociateRouteTable",
-          "ec2:DeleteRouteTable",
-          "ec2:DeleteSubnet",
-          "ec2:DeleteInternetGateway",
-          "ec2:DetachInternetGateway",
-          "ec2:DeleteVpc",
-          "ec2:Describe*"
+          "ec2:*"
         ]
         Resource = "*"
       },
-
       {
         Effect = "Allow"
         Action = [
-          "ecr:DeleteRepository",
-          "ecr:BatchDeleteImage",
-          "ecr:DescribeRepositories"
+          "ecr:*"
         ]
         Resource = "*"
       },
-
       {
         Effect = "Allow"
         Action = [
-          "route53:ChangeResourceRecordSets",
-          "route53:GetChange",
-          "route53:ListHostedZones",
-          "route53:ListResourceRecordSets"
+          "acm:*"
         ]
         Resource = "*"
       },
-
       {
         Effect = "Allow"
         Action = [
-          "logs:DeleteLogGroup",
-          "logs:DescribeLogGroups"
+          "route53:*",
+          "route53domains:*"
         ]
         Resource = "*"
       },
-
       {
         Effect = "Allow"
         Action = [
-          "ssm:DeleteParameter",
-          "ssm:GetParameter"
+          "logs:*"
         ]
         Resource = "*"
       },
-
       {
-        Effect   = "Allow"
-        Action   = "iam:PassRole"
+        Effect = "Allow"
+        Action = [
+          "ssm:*"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:*"
+        ]
+        Resource = [
+          "arn:aws:s3:::hasanenv-tf-state",
+          "arn:aws:s3:::hasanenv-tf-state/*"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:*"
+        ]
+        Resource = "arn:aws:dynamodb:eu-west-2:727646481331:table/terraform-state-lock"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:*"
+        ]
         Resource = "*"
       }
     ]
