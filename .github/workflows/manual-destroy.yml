@@ -39,6 +39,10 @@ jobs:
         working-directory: infra/
         run: terraform init
 
+      - name: Terraform destroy plan
+        working-directory: infra/
+        run: terraform plan -destroy -out=destroy.plan
+
       - name: Terraform destroy
         working-directory: infra/
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve destroy.plan
