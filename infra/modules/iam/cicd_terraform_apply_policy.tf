@@ -6,7 +6,6 @@ resource "aws_iam_policy" "terraform_apply" {
     Version = "2012-10-17"
     Statement = [
 
-      ##### TERRAFORM CORE READS #####
       {
         Sid      = "TerraformCallerIdentity"
         Effect   = "Allow"
@@ -14,7 +13,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### ECS #####
       {
         Sid    = "ECSDeploy"
         Effect = "Allow"
@@ -41,7 +39,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### ECR #####
       {
         Sid    = "ECRPush"
         Effect = "Allow"
@@ -69,7 +66,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### TERRAFORM STATE #####
       {
         Sid    = "TerraformStateReads"
         Effect = "Allow"
@@ -101,7 +97,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "arn:aws:dynamodb:eu-west-2:727646481331:table/terraform-state-lock"
       },
 
-      ##### ROUTE53 #####
       {
         Sid    = "Route53Writes"
         Effect = "Allow"
@@ -124,7 +119,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### ACM #####
       {
         Sid    = "ACMReads"
         Effect = "Allow"
@@ -136,7 +130,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### IAM #####
       {
         Sid    = "IAMWrites"
         Effect = "Allow"
@@ -166,7 +159,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### LOGS #####
       {
         Sid    = "LogsWrites"
         Effect = "Allow"
@@ -186,7 +178,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### SSM #####
       {
         Sid    = "SSMWrites"
         Effect = "Allow"
@@ -212,7 +203,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### EC2 #####
       {
         Sid      = "EC2Reads"
         Effect   = "Allow"
@@ -220,7 +210,6 @@ resource "aws_iam_policy" "terraform_apply" {
         Resource = "*"
       },
 
-      ##### ELB #####
       {
         Sid    = "ELBWrites"
         Effect = "Allow"

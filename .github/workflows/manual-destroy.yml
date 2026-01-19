@@ -27,7 +27,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.TF_VAR_aws_account_id }}:role/terraform-apply-role
+          role-to-assume: arn:aws:iam::${{ env.TF_VAR_aws_account_id }}:role/manual-destroy-role
           aws-region: ${{ env.TF_VAR_aws_region }}
 
       - name: Setup Terraform
