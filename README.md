@@ -146,7 +146,7 @@ This project uses three GitHub Actions workflows with clear separation of respon
 ## Containers & Runtime
 
 - Multi-stage Docker build strips out tooling and reduces image size
-- Reduced final image size by ~60% (from ~120 MB to ~75 MB)
+- Reduced final image size by ~40% (from ~120 MB to ~75 MB)
 - Explicit non-root user enforcing least privilege at runtime
 - Reduced attack surface by removing unused binaries, package managers, and shells
 
