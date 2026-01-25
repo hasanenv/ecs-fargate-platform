@@ -188,21 +188,12 @@ Some design choices reflect deliberate tradeoffs:
 
 ## Future Improvements
 
-Several improvements could be made to extend the platform further:
+Potential improvements to further mature the platform include:
 
 - Refactor Terraform modules to make heavier use of `for_each` and maps to reduce repetition and improve scalability
-- Split the CI/CD workflow into separate pipelines for clearer separation of concerns (for example):
-  - Terraform plan (validation and review)
-  - Terraform apply (controlled deployment)
-  - Application build and image publishing
- 
-- Introduce path-based workflow triggers so pipelines run only when relevant parts of the repository change:
-  - Infrastructure pipelines trigger only on changes under `infra/`
-  - Application build and image push trigger only on changes under `app/`
- 
+- Revisit NAT Gateway design to evaluate regional vs single-AZ NAT Gateways (following recent AWS changes)
 - Add environment-based workflows (for example dev and prod) with promotion between stages
 - Extend observability with CloudWatch alarms and metrics
-- Revisit NAT Gateway design to evaluate regional vs single-AZ NAT Gateways (following recent AWS changes)
 
 ---
 
