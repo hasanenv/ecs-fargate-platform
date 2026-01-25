@@ -9,4 +9,4 @@ fi
 mkdir -p /app/config
 echo "$GATUS_CONFIG" > /app/config/config.yaml
 
-exec /app/gatus   # SIGTERM & SIGKILL
+exec /app/gatus  
