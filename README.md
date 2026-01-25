@@ -38,7 +38,7 @@ The platform focuses on **infrastructure design, security, and deployment automa
 - Infrastructure defined as code
 - Secure CI/CD using OIDC, eliminating need for long-lived credentials
 - Principle of least privilege applied consistently
-- Immutable container deployments
+- Deployments based on immutable container images
 - Explicit availability and cost tradeoffs
 
 ## Architecture Overview
