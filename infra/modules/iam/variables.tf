@@ -16,3 +16,17 @@ variable "github_repo" {
 variable "owner" {
   type = string
 }
+variable "aws_region" {
+  description = "Region of the DynamoDB lock table (used to build its ARN)."
+  type        = string
+}
+
+variable "tf_state_bucket" {
+  description = "S3 bucket holding Terraform state."
+  type        = string
+}
+
+variable "tf_lock_table" {
+  description = "DynamoDB table used for Terraform state locking."
+  type        = string
+}

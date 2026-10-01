@@ -8,14 +8,11 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket         = "hasanenv-tf-state"
-    key            = "terraform.tfstate"
-    region         = "eu-west-2"
-    dynamodb_table = "terraform-state-lock"
-  }
+  # Partial configuration: bucket, key, region and dynamodb_table are supplied
+  # at init time with -backend-config (see .github/workflows and README Quick Start).
+  backend "s3" {}
 }
 
 provider "aws" {
-  region = "eu-west-2"
+  region = var.aws_region
 }

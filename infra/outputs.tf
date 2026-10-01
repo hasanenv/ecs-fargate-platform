@@ -5,7 +5,7 @@ output "alb_dns_name" {
 
 output "service_url" {
   description = "Public URL of the Gatus service"
-  value       = "https://tm.${data.aws_route53_zone.hasangatus.name}"
+  value       = "https://tm.${data.aws_route53_zone.domain.name}"
 }
 
 output "ecs_cluster_name" {

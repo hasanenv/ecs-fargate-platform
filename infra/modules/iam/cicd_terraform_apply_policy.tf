@@ -74,8 +74,8 @@ resource "aws_iam_policy" "terraform_apply" {
           "s3:ListBucket"
         ]
         Resource = [
-          "arn:aws:s3:::hasanenv-tf-state",
-          "arn:aws:s3:::hasanenv-tf-state/*"
+          "arn:aws:s3:::${var.tf_state_bucket}",
+          "arn:aws:s3:::${var.tf_state_bucket}/*"
         ]
       },
       {
@@ -83,7 +83,7 @@ resource "aws_iam_policy" "terraform_apply" {
         Effect = "Allow"
         Action = ["s3:PutObject"]
         Resource = [
-          "arn:aws:s3:::hasanenv-tf-state/*"
+          "arn:aws:s3:::${var.tf_state_bucket}/*"
         ]
       },
       {
@@ -94,7 +94,7 @@ resource "aws_iam_policy" "terraform_apply" {
           "dynamodb:PutItem",
           "dynamodb:DeleteItem"
         ]
-        Resource = "arn:aws:dynamodb:eu-west-2:727646481331:table/terraform-state-lock"
+        Resource = "arn:aws:dynamodb:${var.aws_region}:${var.aws_account_id}:table/${var.tf_lock_table}"
       },
 
       {

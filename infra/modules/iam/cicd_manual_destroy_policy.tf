@@ -67,8 +67,8 @@ resource "aws_iam_policy" "manual_destroy_policy" {
           "s3:*"
         ]
         Resource = [
-          "arn:aws:s3:::hasanenv-tf-state",
-          "arn:aws:s3:::hasanenv-tf-state/*"
+          "arn:aws:s3:::${var.tf_state_bucket}",
+          "arn:aws:s3:::${var.tf_state_bucket}/*"
         ]
       },
       {
@@ -76,7 +76,7 @@ resource "aws_iam_policy" "manual_destroy_policy" {
         Action = [
           "dynamodb:*"
         ]
-        Resource = "arn:aws:dynamodb:eu-west-2:727646481331:table/terraform-state-lock"
+        Resource = "arn:aws:dynamodb:${var.aws_region}:${var.aws_account_id}:table/${var.tf_lock_table}"
       },
       {
         Effect = "Allow"

@@ -11,10 +11,13 @@ module "vpc" {
 module "iam" {
   source = "./modules/iam"
 
-  cicd_role_name = "hasanenv-cd-role-ecs"
-  github_repo    = var.github_repo
-  aws_account_id = var.aws_account_id
-  owner          = var.owner
+  cicd_role_name  = "hasanenv-cd-role-ecs"
+  github_repo     = var.github_repo
+  aws_account_id  = var.aws_account_id
+  aws_region      = var.aws_region
+  tf_state_bucket = var.tf_state_bucket
+  tf_lock_table   = var.tf_lock_table
+  owner           = var.owner
 }
 
 module "ecr" {
@@ -33,8 +36,8 @@ module "security_groups" {
 module "acm" {
   source = "./modules/acm"
 
-  domain_name = "hasangatus.click"
-  zone_id     = data.aws_route53_zone.hasangatus.zone_id
+  domain_name = var.domain_name
+  zone_id     = data.aws_route53_zone.domain.zone_id
   owner       = var.owner
 }
 
@@ -51,8 +54,8 @@ module "alb" {
 module "route_53" {
   source = "./modules/route53"
 
-  zone_id      = data.aws_route53_zone.hasangatus.zone_id
-  zone_name    = data.aws_route53_zone.hasangatus.name
+  zone_id      = data.aws_route53_zone.domain.zone_id
+  zone_name    = data.aws_route53_zone.domain.name
   alb_dns_name = module.alb.alb_dns_name
   alb_zone_id  = module.alb.alb_zone_id
 }
