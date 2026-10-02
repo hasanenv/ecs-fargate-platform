@@ -2,3 +2,5 @@ ignore:
   - vulnerability: CVE-2026-22184
     reason: "Not exploitable in distroless runtime"
     fix-state: unknown
+  - vulnerability: CVE-2026-85091
+    reason: "zlib gzprintf/gzvprintf after non-blocking gzwrite stall. Gatus is Go and does not use the zlib gz* API. No fixed version available upstream."
