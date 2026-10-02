@@ -84,6 +84,22 @@ resource "aws_iam_policy" "manual_destroy_policy" {
           "iam:*"
         ]
         Resource = "*"
+      },
+      {
+        # Belt and braces: the destroy role can never remove the roles the pipelines run under.
+        Sid    = "ProtectCICDRoles"
+        Effect = "Deny"
+        Action = [
+          "iam:DeleteRole",
+          "iam:DeleteRolePolicy",
+          "iam:DetachRolePolicy",
+          "iam:UpdateAssumeRolePolicy"
+        ]
+        Resource = [
+          aws_iam_role.docker_build_push_role.arn,
+          aws_iam_role.terraform_apply_role.arn,
+          aws_iam_role.manual_destroy_role.arn
+        ]
       }
     ]
   })

@@ -11,18 +11,6 @@ module "vpc" {
 module "iam" {
   source = "./modules/iam"
 
-  cicd_role_name  = "hasanenv-cd-role-ecs"
-  github_repo     = var.github_repo
-  aws_account_id  = var.aws_account_id
-  aws_region      = var.aws_region
-  tf_state_bucket = var.tf_state_bucket
-  tf_lock_table   = var.tf_lock_table
-  owner           = var.owner
-}
-
-module "ecr" {
-  source = "./modules/ecr"
-
   owner = var.owner
 }
 
@@ -63,8 +51,7 @@ module "route_53" {
 module "ecs" {
   source = "./modules/ecs"
 
-  ecr_registry                = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
-  ecr_repo                    = "gatus-repo"
+  ecr_repository_url          = data.aws_ecr_repository.gatus.repository_url
   alb_target_group_arn        = module.alb.alb_target_group_arn
   ecs_service_sg_id           = module.security_groups.ecs_service_sg_id
   aws_region                  = var.aws_region
