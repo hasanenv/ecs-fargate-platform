@@ -303,10 +303,10 @@ terraform init \
 terraform apply
 ```
 
-This creates `docker-build-push-role-2`, `terraform-apply-role`, `manual-destroy-role` and the `gatus-repo` ECR repository.
+This creates `docker-build-push-role`, `terraform-apply-role`, `manual-destroy-role` and the `gatus-repo` ECR repository.
 
 > [!IMPORTANT]
-> `docker-build-push-role-2` and `terraform-apply-role` trust only `refs/heads/main` of `github_repo`. Runs from any other branch fail at the Configure AWS credentials step. Pull request runs of `docker-build-push` build and scan the image, then fail at the same step, which is expected.
+> `docker-build-push-role` and `terraform-apply-role` trust only `refs/heads/main` of `github_repo`. Runs from any other branch fail at the Configure AWS credentials step. Pull request runs of `docker-build-push` build and scan the image, then fail at the same step, which is expected.
 
 ### 4. Build and Push the First Image
 
