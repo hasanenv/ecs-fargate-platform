@@ -80,8 +80,7 @@ ecs-fargate-platform/
 │       └── ...
 ├── assets/
 │   ├── ecs-diagram.png
-│   └── gatus-demo.gif      
-│   
+│   └── gatus-demo.gif
 ├── infra/
 │   ├── bootstrap/                 # Separate root and state: CI/CD roles and ECR repository
 │   │   ├── .terraform.lock.hcl
@@ -129,7 +128,7 @@ This project uses three GitHub Actions workflows with clear separation of respon
 > [!IMPORTANT]
 > Two findings are explicitly ignored via `.grype.yaml`, each with a justification:
 > - [CVE-2026-22184](https://nvd.nist.gov/vuln/detail/CVE-2026-22184#vulnCurrentDescriptionTitle) only affects the `untgz` utility of the `zlib` library, which is not used by our application.
-> - CVE-2026-85091 is a zlib heap overflow in the `gzprintf` and `gzvprintf` path after a stalled non-blocking `gzwrite`. Gatus is a Go application and does not use the zlib `gz*` API, and no fixed version is available upstream.
+> - [CVE-2026-85091](https://nvd.nist.gov/vuln/detail/CVE-2026-85091) is a zlib heap overflow in the `gzprintf` and `gzvprintf` path after a stalled non-blocking `gzwrite`. Gatus is a Go application and does not use the zlib `gz*` API, and no fixed version is available upstream.
 
 ### Terraform Apply (Manual)
 - Triggered manually via GitHub Actions
@@ -175,6 +174,7 @@ Access control is a foundational part of the platform design:
 ## Observability
 
 - ECS task logs shipped to CloudWatch
+- Container Insights enabled on the ECS cluster for cluster, service and task metrics
 - Log groups created and managed via Terraform
 - No manual logging configuration or console setup required
 
@@ -208,13 +208,15 @@ Destructive actions use a dedicated, scoped role, so the day to day pipeline rol
 - **Terraform modules** repeat resources in places. Heavier use of `for_each` and maps would reduce repetition and improve scalability
 - **NAT Gateway design** should be revisited to evaluate regional vs single-AZ NAT Gateways, following recent AWS changes
 - **Single environment** only. Environment-based workflows (for example dev and prod) with promotion between stages would be the next step
-- **Observability** stops at logs. CloudWatch alarms and metrics would extend it
+- **No alerting.** Logs and Container Insights metrics are collected, but no CloudWatch alarms are configured
+- **Log retention** is not set, so CloudWatch logs are kept indefinitely
+- **TLS policy** on the HTTPS listener is the older default (`ELBSecurityPolicy-2016-08`). A current policy would drop legacy TLS versions
 
 ## Quick Start
 
 ### Prerequisites
 
-- AWS account, plus admin level credentials available locally for the one-off bootstrap steps. Everything after that runs through GitHub Actions with OIDC
+- AWS account, plus admin level credentials available locally for the one-off local steps (bootstrap and first apply). After that, day to day changes run through GitHub Actions with OIDC
 - Your own domain with a public Route 53 hosted zone in the same account. The app is published at `tm.<your-domain>`. A subdomain delegated to Route 53 also works: create a public hosted zone for it and add its four name servers as `NS` records at your DNS provider
 - An S3 bucket and DynamoDB table for Terraform state, created in step 1
 - GitHub OIDC identity provider in IAM (`token.actions.githubusercontent.com`). The CI/CD roles trust it but Terraform does not create it
