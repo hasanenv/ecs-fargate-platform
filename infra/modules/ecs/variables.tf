@@ -6,12 +6,9 @@ variable "alb_target_group_arn" {
   type = string
 }
 
-variable "ecr_registry" {
-  type = string
-}
-
-variable "ecr_repo" {
-  type = string
+variable "ecr_repository_url" {
+  description = "URL of the ECR repository holding the Gatus image (managed by infra/bootstrap)."
+  type        = string
 }
 
 variable "ecs_task_execution_role_arn" {
