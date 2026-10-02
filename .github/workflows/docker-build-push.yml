@@ -40,6 +40,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t gatus:${{ steps.meta.outputs.tag }} ./app/gatus
 
+      - name: Show high and critical findings
+        continue-on-error: true
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $HOME/.local/bin v0.97.1
+          $HOME/.local/bin/grype docker:gatus:${{ steps.meta.outputs.tag }} -o table | grep -Ei "NAME|high|critical"
+
       - name: Scan image with Anchore
         uses: anchore/scan-action@v6
         with:
